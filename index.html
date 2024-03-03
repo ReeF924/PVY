@@ -3,9 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- <meta http-equiv="refresh" content="5"> -->
     <title>Js</title>
     <link rel="stylesheet" href="./style.css">
     <link rel="stylesheet" href="./bs.css">
+
 </head>
 <body>
 <aside>
@@ -18,23 +20,23 @@
 </aside>
 
 <main>
-    <header>
+    <header class="center-div">
         <div class="projects-container">
-            <input type="text" placeholder="Zadejte nazev projektu" id="projectNameInput">
+            <input type="text" placeholder="Zadejte nazev ukolu" id="projectNameInput">
 
-            <select id="projectSelect">
+            <select id="projectSelect" class="center-div">
             </select>
         </div>
-        <span class="stopwatchTime">00:00:00</span>
-        <button class="startTimerButton">Start</button>
+        <span id="stopwatchTime">00:00:00</span>
+        <button id="startTimerButton">Start</button>
     </header>
 
     <section>
         <div class="main-header d-flex jc-space-between">
-            <div>Dneska jsem makal jak sroub</div>
+            <h1>Dneska jsem makal jak sroub: <span id="timerTotal">0:00:00</span></h1>
             <button type="button">Novy zaznam</button>
         </div>
-        <table>
+        <table id="assignmentTable">
             <thead>
             <tr>
                 <th>Ukol</th>
@@ -46,19 +48,13 @@
             </tr>
             </thead>
             <tbody>
-            <tr>
-                <td>Ukol</td>
-                <td>Projekt</td>
-                <td>Zacatek</td>
-                <td>Konec</td>
-                <td>Celkem</td>
-                <td>Akce</td>
-            </tr>
             </tbody>
         </table>
     </section>
 </main>
 
-<script src="./script.js"></script>
+
 </body>
+<script src="overview.js"></script>
+<script src="./another.js"></script>
 </html>

@@ -1,3 +1,1 @@
-export function randomMethod() {
-
-}
+console.log('another.js loaded');
