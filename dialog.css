@@ -1,0 +1,26 @@
+.dialog{
+    background-color: rgba(200,200,200);
+    width: 350px;
+    display: grid;
+    grid-template-columns: 1fr;
+    font-size: 16px;
+    border: solid black 3px;
+    justify-content: center;
+}
+
+
+
+.dialog-header{
+    height: 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 2px 4px;
+    border-bottom: solid black 3px;
+}
+
+.close-dialog:hover{
+    font-weight: bold;
+    cursor: pointer;
+    user-select: none;
+}

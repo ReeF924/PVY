@@ -41,6 +41,8 @@ aside > div{
     margin-bottom: 3px;
     border-right: solid white 3px !important;
     border-radius: 0;
+    border-bottom-right-radius: 0;
+
 }
 
 header{
@@ -114,7 +116,9 @@ table tr:nth-child(even) {
 
 
 table  th{
-    background-color: grey;
+    background-color: rgba(190,190,190);
+
+    /*background-color: pink;*/
     border: solid black 2px;
     margin: 0;
 }
