@@ -40,8 +40,6 @@ aside > div{
     border: solid black 3px;
     margin-bottom: 3px;
     border-right: solid white 3px !important;
-    border-radius: 0;
-    border-bottom-right-radius: 0;
 
 }
 

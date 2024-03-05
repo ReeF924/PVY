@@ -12,11 +12,41 @@
     <div class="dialog-header">
         <span>Novy zaznam</span>
         <span class="close-dialog">C</span>
-        <select id="addAssignmentSelect">
 
     </div>
-    <div>
-        </select>
+    <div class="dialog-body">
+        <div>
+            <label for="addAssignmentProjectSelect">Projekt</label>
+            <select id="addAssignmentProjectSelect">
+                <option>First</option>
+                <option>Second</option>
+            </select>
+        </div>
+        <div>
+            <label for="addAssignmentNameInput">Cinnost</label>
+            <input type="text" id="addAssignmentNameInput" placeholder="Zadejte co delate">
+
+        </div>
+
+        <div>
+            <label for="addAssignmentBeginDateInput">Den</label>
+            <input type="date" id="addAssignmentBeginDateInput">
+        </div>
+
+        <!--        <div>-->
+        <!--            <label>Den</label>-->
+        <!--            <input type="date" id="">-->
+
+        <!--        </div>-->
+        <div>
+            <label>Zacatek</label>
+            <div class="time-input-container">
+                <input type="number" id="addAssignmentBeginHoursInput" min="0" max="23">
+                <span>:</span>
+                <input type="number" id="addAssignmentBeginMinutesInput" min="0" max="59">
+            </div>
+        </div>
+
     </div>
 
 </div>
