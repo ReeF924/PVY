@@ -5,10 +5,10 @@
     <title>Dialog</title>
     <link rel="stylesheet" href="./style.css">
     <link rel="stylesheet" href="./bs.css">
-    <link rel="stylesheet" href="./dialog.css">
+    <link rel="stylesheet" href="addDialog.css">
 </head>
 <body>
-<div class="dialog">
+<form class="dialog">
     <div class="dialog-header">
         <span>Novy zaznam</span>
         <span class="close-dialog">C</span>
@@ -38,18 +38,34 @@
         <!--            <input type="date" id="">-->
 
         <!--        </div>-->
-        <div>
-            <label>Zacatek</label>
+
+        <div class="time-input-wrapper">
             <div class="time-input-container">
-                <input type="number" id="addAssignmentBeginHoursInput" min="0" max="23">
-                <span>:</span>
-                <input type="number" id="addAssignmentBeginMinutesInput" min="0" max="59">
+                <div class="begin-time">
+                    <label>Zacatek</label>
+                    <div class="time-input-row">
+                        <input type="number" id="addAssignmentBeginHoursInput" min="0" max="23">
+                        <span>:</span>
+                        <input type="number" id="addAssignmentBeginMinutesInput" min="0" max="59">
+                    </div>
+                </div>
+                <div class="end-time">
+                    <label>Konec</label>
+                    <div class="time-input-row">
+                        <input type="number" id="addAssignmentEndHoursInput" min="0" max="23">
+                        <span>:</span>
+                        <input type="number" id="addAssignmentEndMinutesInput" min="0" max="59">
+                    </div>
+                </div>
+
+            </div>
+            <div class="time-input-total">
+                }
             </div>
         </div>
-
     </div>
 
-</div>
+</form>
 
 
 </body>

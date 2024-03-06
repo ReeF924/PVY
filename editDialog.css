@@ -1,0 +1,18 @@
+
+.edit-project-form{
+    width: 400px;
+    background-color: darkgrey;
+    display: flex;
+    flex-direction: column;
+    gap: 50px;
+    border: solid black 3px;
+}
+
+
+
+input{
+    border: solid black 3px;
+    background-color: white;
+    outline: none;
+    padding: 3px 2px;
+}
