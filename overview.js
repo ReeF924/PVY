@@ -15,7 +15,7 @@ let assignments =
     [new Assignment("Assignment 1", new Date(2024, 3, 3, 23, 0), new Date(2024, 3, 4, 2, 32), "Project 1"),
         new Assignment("Assignment 2", new Date(2021, 9, 30, 10, 0), new Date(2021, 9, 30, 14, 0), "Project 1"),
         new Assignment("Assignment 1", new Date(2021, 9, 20, 10, 0), new Date(2021, 9, 20, 11, 0), "Project 2"),
-        new Assignment("Assignment 2", new Date(2021, 9, 24, 10, 0), new Date(2021, 9, 28, 14, 0), "Project 2")];
+        new Assignment("Assignment 2", new Date(Date.now() - 3600000), new Date(), "Project 2")];
 
 
 const projectSelect = document.getElementById("projectSelect");
@@ -25,6 +25,11 @@ const assignmentTable = document.querySelector('#assignmentTable tbody');
 const startTimerButton = document.getElementById("startTimerButton");
 const stopwatchSpan = document.getElementById("stopwatchTime");
 const projectNameInput = document.getElementById("projectNameInput");
+
+//projectEdit elements
+const projectEditDialog = document.getElementById('project-edit-dialog');
+const projectEditDialogButton = document.getElementById('project-edit-dialog-button');
+const projectEditDialogInput = document.getElementById('project-edit-dialog-input');
 
 
 let counter = 0;
@@ -41,6 +46,8 @@ assignments.forEach(assignment => {
 let startDate;
 let timerInterval;
 startTimerButton.addEventListener('click', startTimer);
+
+
 
 getTotalTimeToday();
 
@@ -86,9 +93,18 @@ function createAssignmentRow({id, name, project, beginDateTime, endDateTime}) {
 
     assignmentRow.appendChild(createElementWithText("td", displayTime(duration)));
 
-    const deleteTD = document.createElement("td");
+    const tdElement = document.createElement("td");
+    tdElement.classList.add('row-links');
+
+    const editLink = document.createElement('a');
+    editLink.innerText = 'Upravit';
+
+    editLink.addEventListener('click', editProjectNameHandler);
+
+    tdElement.appendChild(editLink);
+
     const deleteLink = document.createElement("a");
-    deleteLink.innerText = "smazat";
+    deleteLink.innerText = "Smazat";
     deleteLink.addEventListener("click", () => {
         assignmentRow.remove();
 
@@ -97,8 +113,8 @@ function createAssignmentRow({id, name, project, beginDateTime, endDateTime}) {
         getTotalTimeToday()
     });
 
-    deleteTD.appendChild(deleteLink);
-    assignmentRow.appendChild(deleteTD);
+    tdElement.appendChild(deleteLink);
+    assignmentRow.appendChild(tdElement);
 
     return assignmentRow;
 }
@@ -127,7 +143,6 @@ function getTotalTimeToday() {
 
     assignments.forEach(ass => {
         if (!isToday(ass.beginDateTime) && !isToday(ass.endDateTime)) {
-            console.log('false');
             return; //acts as continue
         }
 
@@ -142,11 +157,10 @@ function getTotalTimeToday() {
 function isToday(date) {
     const now = new Date();
 
-    const isTodayBool =  now.getUTCFullYear() === date.getUTCFullYear() &&
+    const isTodayBool = now.getUTCFullYear() === date.getUTCFullYear() &&
         now.getUTCMonth() === date.getUTCMonth() &&
         now.getUTCDay() === date.getUTCDay();
 
-    console.log(isTodayBool);
     return isTodayBool;
 }
 
@@ -158,4 +172,24 @@ function addProjectsToSelect(select) {
         counter++;
         select.appendChild(option);
     });
+}
+
+function editProjectNameHandler(){
+
+    projectEditDialog.show();
+
+    projectEditDialogButton.addEventListener('click', () => {
+        const name = projectEditDialogInput.value;
+
+        if(!name)
+            return;
+
+
+
+
+        projectEditDialog.close();
+    });
+
+
+
 }

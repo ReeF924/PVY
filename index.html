@@ -7,6 +7,7 @@
     <title>Js</title>
     <link rel="stylesheet" href="./style.css">
     <link rel="stylesheet" href="./bs.css">
+    <link rel="stylesheet" href="projectEditDialog.css">
 
 </head>
 <body>
@@ -22,7 +23,7 @@
 <main>
     <header class="center-div">
         <div class="projects-container">
-            <input  id="projectNameInput" type="text" placeholder="Zadejte nazev ukolu">
+            <input id="projectNameInput" type="text" placeholder="Zadejte nazev ukolu">
 
             <select id="projectSelect" class="center-div">
             </select>
@@ -30,6 +31,23 @@
         <span id="stopwatchTime">00:00:00</span>
         <button id="startTimerButton">Start</button>
     </header>
+
+    <dialog id="project-edit-dialog">
+        <form class="edit-project-form">
+            <div class="dialog-header">
+                <span>Novy zaznam</span>
+                <span class="close-dialog">C</span>
+            </div>
+
+            <div class="center-div">
+                <input type="text" id="project-edit-dialog-input" class="" placeholder="Zadejte název projektu">
+            </div>
+
+            <div class="center-div">
+                <button type="button" id="project-edit-dialog-button">Ulozit</button>
+            </div>
+        </form>
+    </dialog>
 
     <section>
         <div class="main-header d-flex jc-space-between">

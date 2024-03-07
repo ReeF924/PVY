@@ -10,6 +10,11 @@ html{
     margin: 0;
 }
 
+dialog{
+    margin: auto auto !important;
+    top: 25vh;
+}
+
 button{
     background-color: white;
     border: solid black 2px;
@@ -87,6 +92,10 @@ main{
     width: 100%;
 }
 
+.main-header{
+    margin-bottom: 20px;
+}
+
 
 section{
     box-sizing: border-box;
@@ -135,6 +144,15 @@ table td:last-child {
     border-right: none;
 }
 
+.row-links{
+    display: flex;
+    justify-content: center;
+    gap: 30px;
+
+    border: none; !important;
+}
+
 a{
     cursor: pointer;
 }
+
