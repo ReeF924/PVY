@@ -18,25 +18,12 @@ let assignments =
         new Assignment("Assignment 2", new Date(Date.now() - 3600000), new Date(), "Project 2")];
 
 
-const projectSelect = document.getElementById("projectSelect");
-const totalTimeTodayEl = document.getElementById('totalTimeToday')
-const assignmentTable = document.querySelector('#assignmentTable tbody');
-
-const startTimerButton = document.getElementById("startTimerButton");
-const stopwatchSpan = document.getElementById("stopwatchTime");
-const projectNameInput = document.getElementById("projectNameInput");
-
-//projectEdit elements
-const projectEditDialog = document.getElementById('project-edit-dialog');
-const projectEditDialogButton = document.getElementById('project-edit-dialog-button');
-const projectEditDialogInput = document.getElementById('project-edit-dialog-input');
-
 
 let counter = 0;
-
 addProjectsToSelect(projectSelect);
 
 
+//set up overview layout
 assignments.forEach(assignment => {
     const assignmentRow = createAssignmentRow(assignment);
 
@@ -50,6 +37,14 @@ startTimerButton.addEventListener('click', startTimer);
 
 
 getTotalTimeToday();
+
+//set up projects layout
+
+const projectsWithTime = getTotalTimePerProject(projects);
+
+projectsWithTime.forEach(project => {
+    projectsTable.appendChild(createProjectRow(project));
+});
 
 function startTimer() {
     startDate = new Date();
@@ -94,8 +89,8 @@ function createAssignmentRow({id, name, project, beginDateTime, endDateTime}) {
     assignmentRow.appendChild(createElementWithText("td", displayTime(duration)));
 
     const tdElement = document.createElement("td");
-    tdElement.classList.add('row-links');
 
+    tdElement.classList.add('row-links');
     const editLink = document.createElement('a');
     editLink.innerText = 'Upravit';
 
@@ -117,6 +112,38 @@ function createAssignmentRow({id, name, project, beginDateTime, endDateTime}) {
     assignmentRow.appendChild(tdElement);
 
     return assignmentRow;
+}
+
+// @todo use this during init
+function createProjectRow({name, totalTimeMs}){
+    const projectRow = document.createElement('tr');
+    projectRow.appendChild(createElementWithText('td', name));
+    projectRow.appendChild(createElementWithText('td', formatDateFromMs(totalTimeMs)));
+
+    const tdElement = document.createElement('td');
+
+    //@todo duplicate code, maybe make a function?
+    tdElement.classList.add('row-links');
+
+    const editLink = document.createElement('a');
+    editLink.innerText = 'Upravit';
+    editLink.addEventListener('click', editProjectNameHandler);
+
+
+    tdElement.appendChild(editLink);
+
+    const deleteLink = document.createElement("a");
+    deleteLink.innerText = "Smazat";
+    deleteLink.addEventListener("click", () => {
+        projectRow.remove();
+
+        projects = projects.filter(proj => proj !== name);
+    });
+
+    tdElement.appendChild(deleteLink);
+    projectRow.appendChild(tdElement);
+
+    return projectRow;
 }
 
 function createElementWithText(tag, text) {
@@ -142,26 +169,59 @@ function getTotalTimeToday() {
     nextMidnight.setDate(nextMidnight.getDate() + 1);
 
     assignments.forEach(ass => {
-        if (!isToday(ass.beginDateTime) && !isToday(ass.endDateTime)) {
-            return; //acts as continue
-        }
-
-        const laterBeginDateTime = ass.beginDateTime > todayMidnight ? ass.beginDateTime : todayMidnight;
-        const earlierEndDateTime = ass.endDateTime < nextMidnight ? ass.endDateTime : nextMidnight;
-
-        totalTimeTodayMs += earlierEndDateTime - laterBeginDateTime;
+        totalTimeTodayMs += getTimeFromAssignment(ass, todayMidnight, nextMidnight);
     });
-    totalTimeTodayEl.innerText = `${Math.floor((totalTimeTodayMs / (1000 * 60 * 60)) % 24).toString().padStart(2, '0')}:${Math.floor((totalTimeTodayMs / (1000 * 60)) % 60).toString().padStart(2, '0')}:${Math.floor((totalTimeTodayMs / 1000) % 60).toString().padStart(2, '0')}`
+
+    totalTimeTodayEl.innerText = formatDateFromMs(totalTimeTodayMs);
+}
+
+class ProjectWithTime {
+    constructor(name, totalTimeMs = 0) {
+        this.name = name;
+        this.totalTimeMs = totalTimeMs;
+    }
+}
+
+function getTotalTimePerProject(projects) {
+    const output = [];
+
+    projects.forEach(projectName => {
+        const prj = new ProjectWithTime();
+
+        assignments.forEach(ass => {
+           if(ass.project === prj.name){
+               prj.totalTimeMs += getTimeFromAssignment(ass);
+           }
+        });
+
+        output.push(prj);
+    })
+
+    return output;
+}
+
+function getTimeFromAssignment(assignment){
+    if (!isToday(assignment.beginDateTime) && !isToday(assignment.endDateTime)) {
+        return 0;
+    }
+
+    // const laterBeginDateTime = assignment.beginDateTime > todayMidnight ? assignment.beginDateTime : todayMidnight;
+    // const earlierEndDateTime = assignment.endDateTime < nextMidnight ? assignment.endDateTime : nextMidnight;
+
+    return assignment.endDateTime - assignment.beginDateTime;
+}
+
+function formatDateFromMs(timeInMs){
+    return `${Math.floor((totalTimeTodayMs / (1000 * 60 * 60)) % 24).toString().padStart(2, '0')}:${Math.floor((totalTimeTodayMs / (1000 * 60)) % 60).toString().padStart(2, '0')}:${Math.floor((totalTimeTodayMs / 1000) % 60).toString().padStart(2, '0')}`
 }
 
 function isToday(date) {
     const now = new Date();
 
-    const isTodayBool = now.getUTCFullYear() === date.getUTCFullYear() &&
+    return now.getUTCFullYear() === date.getUTCFullYear() &&
         now.getUTCMonth() === date.getUTCMonth() &&
         now.getUTCDay() === date.getUTCDay();
 
-    return isTodayBool;
 }
 
 function addProjectsToSelect(select) {
@@ -174,6 +234,12 @@ function addProjectsToSelect(select) {
     });
 }
 
+function changeLayoutWindow() {
+overviewLayout.classList.toggle('d-none');
+projectsLayout.classList.toggle('d-none');
+}
+
+//@todo not completed
 function editProjectNameHandler(){
 
     projectEditDialog.show();

@@ -13,10 +13,10 @@
 <body>
 <aside>
     <div>
-        Karel
+        Prehled
     </div>
     <div>
-        Varel
+        Projekty
     </div>
 </aside>
 
@@ -49,7 +49,7 @@
         </form>
     </dialog>
 
-    <section>
+    <section id="overview-layout">
         <div class="main-header d-flex jc-space-between">
             <h1>Dneska jsem makal jak sroub: <span id="totalTimeToday">0:00:00</span></h1>
             <button type="button">Novy zaznam</button>
@@ -69,10 +69,29 @@
             </tbody>
         </table>
     </section>
+
+    <section id="projects-layout" class="d-none">
+        <div class="main-header d-flex jc-space-between">
+            <h1>Projekty</h1>
+            <button type="button" id="new-project-button">Novy projekt</button>
+        </div>
+        <table id="projectsTable">
+            <thead>
+            <tr>
+                <th>Nazev projektu</th>
+                <th>Celkovy cas</th>
+                <th>Akce</th>
+            </tr>
+            </thead>
+            <tbody>
+            </tbody>
+        </table>
+    </section>
 </main>
 
 
 </body>
-<script src="overview.js"></script>
-<!--<script src="another.js"></script>-->
+<!--!Must be in this order!-->
+<script src="./src/projectElements.js"></script>
+<script src="./src/overview.js"></script>
 </html>
