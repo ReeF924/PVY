@@ -1,10 +1,10 @@
 
-.edit-project-form{
+.edit-project-container{
     width: 400px;
     display: flex;
     flex-direction: column;
     gap: 30px;
-    border: solid black 3px;
+    border: solid black 2px;
 }
 
 

@@ -1,13 +1,3 @@
-class Assignment {
-    constructor(name, beginDateTime, endDateTime, project) {
-        this.id = assignmentIdCounter++;
-        this.name = name;
-        this.beginDateTime = beginDateTime;
-        this.endDateTime = endDateTime;
-        this.project = project;
-    }
-}
-
 let assignmentIdCounter = 1;
 
 let projects = ["Project 1", "Project 2", "Project 3"];
@@ -18,33 +8,69 @@ let assignments =
         new Assignment("Assignment 2", new Date(Date.now() - 3600000), new Date(), "Project 2")];
 
 
-
 let counter = 0;
-addProjectsToSelect(projectSelect);
 
+LoadData();
 
-//set up overview layout
-assignments.forEach(assignment => {
-    const assignmentRow = createAssignmentRow(assignment);
-
-    assignmentTable.appendChild(assignmentRow);
-});
-
-let startDate;
-let timerInterval;
 startTimerButton.addEventListener('click', startTimer);
 
+overViewLayoutButton.addEventListener('click', () => {
+    if (isSelectedOverview)
+        return;
 
+    overViewLayoutButton.classList.add('selected');
+    projectsLayoutButton.classList.remove('selected');
 
-getTotalTimeToday();
+    projectsLayout.classList.add('d-none');
+    overviewLayout.classList.remove('d-none');
 
-//set up projects layout
-
-const projectsWithTime = getTotalTimePerProject(projects);
-
-projectsWithTime.forEach(project => {
-    projectsTable.appendChild(createProjectRow(project));
+    isSelectedOverview = true;
 });
+
+projectsLayoutButton.addEventListener('click', () => {
+
+    if (!isSelectedOverview)
+        return;
+
+    overViewLayoutButton.classList.remove('selected');
+    projectsLayoutButton.classList.add('selected');
+
+    projectsLayout.classList.remove('d-none');
+    overviewLayout.classList.add('d-none');
+
+    isSelectedOverview = false;
+});
+
+function LoadData() {
+    removeAllChildren(assignmentTable);
+    removeAllChildren(projectsTable);
+
+    //todo clear the list of children first
+    addProjectsToSelect(projectSelect);
+
+    assignments.forEach(assignment => {
+        const assignmentRow = createAssignmentRow(assignment);
+
+        assignmentTable.appendChild(assignmentRow);
+    });
+
+    getTotalTimeToday();
+
+    //set up projects in layout
+    const projectsWithTime = getTotalTimePerProject(projects);
+
+    projectsWithTime.forEach(project => {
+        projectsTable.appendChild(createProjectRow({name: project.name, totalTimeMs: project.totalTimeMs}));
+    });
+
+
+}
+
+function removeAllChildren(parent){
+    while(parent.firstChild){
+        parent.firstChild.remove();
+    }
+}
 
 function startTimer() {
     startDate = new Date();
@@ -94,7 +120,6 @@ function createAssignmentRow({id, name, project, beginDateTime, endDateTime}) {
     const editLink = document.createElement('a');
     editLink.innerText = 'Upravit';
 
-    editLink.addEventListener('click', editProjectNameHandler);
 
     tdElement.appendChild(editLink);
 
@@ -115,7 +140,7 @@ function createAssignmentRow({id, name, project, beginDateTime, endDateTime}) {
 }
 
 // @todo use this during init
-function createProjectRow({name, totalTimeMs}){
+function createProjectRow({name, totalTimeMs}) {
     const projectRow = document.createElement('tr');
     projectRow.appendChild(createElementWithText('td', name));
     projectRow.appendChild(createElementWithText('td', formatDateFromMs(totalTimeMs)));
@@ -127,8 +152,37 @@ function createProjectRow({name, totalTimeMs}){
 
     const editLink = document.createElement('a');
     editLink.innerText = 'Upravit';
-    editLink.addEventListener('click', editProjectNameHandler);
+    editLink.addEventListener('click', () => {
 
+        const oldName = name;
+
+        projectEditDialog.show();
+
+        projectEditDialogButton.addEventListener('click', () => {
+            const newName = projectEditDialogInput.value;
+
+            if (!newName)
+                return;
+
+            console.log(oldName);
+            console.log(newName);
+            console.log(projects.indexOf(oldName))
+            projects[projects.indexOf(oldName)] = newName;
+            console.log(projects);
+
+            assignments.forEach(ass => {
+                if (ass.project === oldName)
+                    ass.project = newName;
+            });
+            console.log(assignments);
+            closeDialog([projectEditDialogInput], projectEditDialog);
+            LoadData();
+        });
+
+        closeEditProjectDialogButton.addEventListener('click', () => {
+            closeDialog([projectEditDialogInput], projectEditDialog);
+        })
+    });
 
     tdElement.appendChild(editLink);
 
@@ -144,6 +198,13 @@ function createProjectRow({name, totalTimeMs}){
     projectRow.appendChild(tdElement);
 
     return projectRow;
+}
+
+function closeDialog(clearElements, dialog){
+clearElements.forEach(el => {
+    el.value = "";
+    dialog.close();
+})
 }
 
 function createElementWithText(tag, text) {
@@ -175,23 +236,17 @@ function getTotalTimeToday() {
     totalTimeTodayEl.innerText = formatDateFromMs(totalTimeTodayMs);
 }
 
-class ProjectWithTime {
-    constructor(name, totalTimeMs = 0) {
-        this.name = name;
-        this.totalTimeMs = totalTimeMs;
-    }
-}
 
 function getTotalTimePerProject(projects) {
     const output = [];
 
     projects.forEach(projectName => {
-        const prj = new ProjectWithTime();
+        const prj = new ProjectWithTime(projectName);
 
         assignments.forEach(ass => {
-           if(ass.project === prj.name){
-               prj.totalTimeMs += getTimeFromAssignment(ass);
-           }
+            if (ass.project === prj.name) {
+                prj.totalTimeMs += getTimeFromAssignment(ass);
+            }
         });
 
         output.push(prj);
@@ -200,10 +255,10 @@ function getTotalTimePerProject(projects) {
     return output;
 }
 
-function getTimeFromAssignment(assignment){
-    if (!isToday(assignment.beginDateTime) && !isToday(assignment.endDateTime)) {
-        return 0;
-    }
+function getTimeFromAssignment(assignment) {
+    // if (!isToday(assignment.beginDateTime) && !isToday(assignment.endDateTime)) {
+    //     return 0;
+    // }
 
     // const laterBeginDateTime = assignment.beginDateTime > todayMidnight ? assignment.beginDateTime : todayMidnight;
     // const earlierEndDateTime = assignment.endDateTime < nextMidnight ? assignment.endDateTime : nextMidnight;
@@ -211,8 +266,8 @@ function getTimeFromAssignment(assignment){
     return assignment.endDateTime - assignment.beginDateTime;
 }
 
-function formatDateFromMs(timeInMs){
-    return `${Math.floor((totalTimeTodayMs / (1000 * 60 * 60)) % 24).toString().padStart(2, '0')}:${Math.floor((totalTimeTodayMs / (1000 * 60)) % 60).toString().padStart(2, '0')}:${Math.floor((totalTimeTodayMs / 1000) % 60).toString().padStart(2, '0')}`
+function formatDateFromMs(totalTimeMs) {
+    return `${Math.floor((totalTimeMs / (1000 * 60 * 60)) % 24).toString().padStart(2, '0')}:${Math.floor((totalTimeMs / (1000 * 60)) % 60).toString().padStart(2, '0')}:${Math.floor((totalTimeMs / 1000) % 60).toString().padStart(2, '0')}`
 }
 
 function isToday(date) {
@@ -225,6 +280,8 @@ function isToday(date) {
 }
 
 function addProjectsToSelect(select) {
+    removeAllChildren(select);
+
     projects.forEach(project => {
         const option = document.createElement("option");
         option.text = project;
@@ -232,30 +289,4 @@ function addProjectsToSelect(select) {
         counter++;
         select.appendChild(option);
     });
-}
-
-function changeLayoutWindow() {
-overviewLayout.classList.toggle('d-none');
-projectsLayout.classList.toggle('d-none');
-}
-
-//@todo not completed
-function editProjectNameHandler(){
-
-    projectEditDialog.show();
-
-    projectEditDialogButton.addEventListener('click', () => {
-        const name = projectEditDialogInput.value;
-
-        if(!name)
-            return;
-
-
-
-
-        projectEditDialog.close();
-    });
-
-
-
 }

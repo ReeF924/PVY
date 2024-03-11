@@ -8,14 +8,15 @@
     <link rel="stylesheet" href="./style.css">
     <link rel="stylesheet" href="./bs.css">
     <link rel="stylesheet" href="projectEditDialog.css">
+    <link rel="stylesheet" href="./addDialog.css">
 
 </head>
 <body>
 <aside>
-    <div>
+    <div id="overviewLayoutButton" class="selected">
         Prehled
     </div>
-    <div>
+    <div id="projectsLayoutButton">
         Projekty
     </div>
 </aside>
@@ -33,10 +34,10 @@
     </header>
 
     <dialog id="project-edit-dialog">
-        <form class="edit-project-form">
+        <div class="edit-project-container">
             <div class="dialog-header">
                 <span>Novy zaznam</span>
-                <span class="close-dialog">C</span>
+                <span id="close-edit-project-dialog" class="close-dialog">C</span>
             </div>
 
             <div class="center-div">
@@ -46,7 +47,7 @@
             <div class="center-div">
                 <button type="button" id="project-edit-dialog-button">Ulozit</button>
             </div>
-        </form>
+        </div>
     </dialog>
 
     <section id="overview-layout">
@@ -92,6 +93,7 @@
 
 </body>
 <!--!Must be in this order!-->
+<script src="./src/classes.js"></script>
 <script src="./src/projectElements.js"></script>
 <script src="./src/overview.js"></script>
 </html>

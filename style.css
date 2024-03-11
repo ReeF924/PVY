@@ -37,15 +37,26 @@ body{
 
 aside{
     position: relative;
-    left: 3px;
     top: 200px;
 }
 
 aside > div{
     border: solid black 3px;
     margin-bottom: 3px;
-    border-right: solid white 3px !important;
+    border-right: none;
+    padding: 3px 4px;
+    display: flex;
+    justify-content: center;
+    cursor: pointer;
+}
 
+aside > div:hover{
+    background-color: rgb(230,230,230);
+    transition: 150ms ease;
+}
+
+aside > div.selected{
+    background-color: darkgrey;
 }
 
 header{
