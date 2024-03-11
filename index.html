@@ -34,7 +34,7 @@
     </header>
 
     <dialog id="project-edit-dialog">
-        <div class="edit-project-container">
+        <form class="edit-project-container" id="edit-dialog-form">
             <div class="dialog-header">
                 <span>Novy zaznam</span>
                 <span id="close-edit-project-dialog" class="close-dialog">C</span>
@@ -44,10 +44,10 @@
                 <input type="text" id="project-edit-dialog-input" class="" placeholder="Zadejte název projektu">
             </div>
 
-            <div class="center-div">
-                <button type="button" id="project-edit-dialog-button">Ulozit</button>
+            <div class="center-div button-container">
+                <button type="submit" id="project-edit-dialog-button">Ulozit</button>
             </div>
-        </div>
+        </form>
     </dialog>
 
     <section id="overview-layout">

@@ -18,6 +18,9 @@ input{
 }
 
 #edit-dialog-button{
-    margin-bottom: 10px;
     box-shadow: black 3px 2px;
+}
+
+.button-container{
+    margin-bottom: 10px;
 }

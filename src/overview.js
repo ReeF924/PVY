@@ -1,11 +1,12 @@
-let assignmentIdCounter = 1;
-
-let projects = ["Project 1", "Project 2", "Project 3"];
+let projects = [new Project("Project 1"),
+    new Project("Project 2"),
+    new Project("Project 3")];
 let assignments =
-    [new Assignment("Assignment 1", new Date(2024, 3, 3, 23, 0), new Date(2024, 3, 4, 2, 32), "Project 1"),
-        new Assignment("Assignment 2", new Date(2021, 9, 30, 10, 0), new Date(2021, 9, 30, 14, 0), "Project 1"),
-        new Assignment("Assignment 1", new Date(2021, 9, 20, 10, 0), new Date(2021, 9, 20, 11, 0), "Project 2"),
-        new Assignment("Assignment 2", new Date(Date.now() - 3600000), new Date(), "Project 2")];
+
+    [new Assignment("Assignment 1", new Date(2024, 3, 3, 23, 0), new Date(2024, 3, 4, 2, 32), "1"),
+        new Assignment("Assignment 2", new Date(2021, 9, 30, 10, 0), new Date(2021, 9, 30, 14, 0), "1"),
+        new Assignment("Assignment 1", new Date(2021, 9, 20, 10, 0), new Date(2021, 9, 20, 11, 0), "2"),
+        new Assignment("Assignment 2", new Date(Date.now() - 3600000), new Date(), "2")];
 
 
 let counter = 0;
@@ -41,10 +42,20 @@ projectsLayoutButton.addEventListener('click', () => {
     isSelectedOverview = false;
 });
 
+closeEditProjectDialogButton.addEventListener('click', () => {
+    closeDialog([projectEditDialogInput], projectEditDialog);
+});
+
+
 function LoadData() {
+    console.log('loadData');
     removeAllChildren(assignmentTable);
     removeAllChildren(projectsTable);
 
+    console.log(assignmentTable.children);
+    console.log(projects.children);
+
+    counter++;
     //todo clear the list of children first
     addProjectsToSelect(projectSelect);
 
@@ -57,17 +68,17 @@ function LoadData() {
     getTotalTimeToday();
 
     //set up projects in layout
-    const projectsWithTime = getTotalTimePerProject(projects);
+    getTotalTimePerProject(projects);
 
-    projectsWithTime.forEach(project => {
-        projectsTable.appendChild(createProjectRow({name: project.name, totalTimeMs: project.totalTimeMs}));
+    projects.forEach(project => {
+        projectsTable.appendChild(createProjectRow(project));
     });
 
 
 }
 
-function removeAllChildren(parent){
-    while(parent.firstChild){
+function removeAllChildren(parent) {
+    while (parent.firstChild) {
         parent.firstChild.remove();
     }
 }
@@ -101,18 +112,23 @@ function stopTimer() {
 }
 
 
-function createAssignmentRow({id, name, project, beginDateTime, endDateTime}) {
+function createAssignmentRow({id, name, projectId, beginDateTime, endDateTime}) {
 
     const assignmentRow = document.createElement("tr");
 
+    const project = projects.find(proj => proj.id === parseInt(projectId));
+
     assignmentRow.appendChild(createElementWithText("td", name));
-    assignmentRow.appendChild(createElementWithText("td", project));
+    assignmentRow.appendChild(createElementWithText("td", project.name));
     assignmentRow.appendChild(createElementWithText("td", displayDate(beginDateTime)));
     assignmentRow.appendChild(createElementWithText("td", displayDate(endDateTime)));
 
     const duration = new Date(endDateTime - beginDateTime);
 
     assignmentRow.appendChild(createElementWithText("td", displayTime(duration)));
+
+    const assignment = assignments.find(id => id === id);
+    assignment.row = assignmentRow;
 
     const tdElement = document.createElement("td");
 
@@ -126,8 +142,8 @@ function createAssignmentRow({id, name, project, beginDateTime, endDateTime}) {
     const deleteLink = document.createElement("a");
     deleteLink.innerText = "Smazat";
     deleteLink.addEventListener("click", () => {
-        assignmentRow.remove();
 
+        assignmentRow.remove();
         assignments = assignments.filter(ass => ass.id !== id);
 
         getTotalTimeToday()
@@ -139,8 +155,9 @@ function createAssignmentRow({id, name, project, beginDateTime, endDateTime}) {
     return assignmentRow;
 }
 
-// @todo use this during init
-function createProjectRow({name, totalTimeMs}) {
+function createProjectRow({id, name, totalTimeMs}) {
+
+    console.log(id);
     const projectRow = document.createElement('tr');
     projectRow.appendChild(createElementWithText('td', name));
     projectRow.appendChild(createElementWithText('td', formatDateFromMs(totalTimeMs)));
@@ -152,59 +169,83 @@ function createProjectRow({name, totalTimeMs}) {
 
     const editLink = document.createElement('a');
     editLink.innerText = 'Upravit';
-    editLink.addEventListener('click', () => {
 
-        const oldName = name;
+    const editEventListener = onClickEdit(id);
 
-        projectEditDialog.show();
+    editLink.addEventListener('click', editEventListener);
 
-        projectEditDialogButton.addEventListener('click', () => {
-            const newName = projectEditDialogInput.value;
 
-            if (!newName)
-                return;
-
-            console.log(oldName);
-            console.log(newName);
-            console.log(projects.indexOf(oldName))
-            projects[projects.indexOf(oldName)] = newName;
-            console.log(projects);
-
-            assignments.forEach(ass => {
-                if (ass.project === oldName)
-                    ass.project = newName;
-            });
-            console.log(assignments);
-            closeDialog([projectEditDialogInput], projectEditDialog);
-            LoadData();
-        });
-
-        closeEditProjectDialogButton.addEventListener('click', () => {
-            closeDialog([projectEditDialogInput], projectEditDialog);
-        })
-    });
+    editDialogForm.addEventListener('submit', editEventListener);
 
     tdElement.appendChild(editLink);
 
     const deleteLink = document.createElement("a");
     deleteLink.innerText = "Smazat";
+
     deleteLink.addEventListener("click", () => {
         projectRow.remove();
 
-        projects = projects.filter(proj => proj !== name);
+        projects = projects.filter(prj => prj.id !== id);
+
+        assignments.filter(ass => ass.projectId !== id);
+
+        LoadData();
     });
+
+
 
     tdElement.appendChild(deleteLink);
     projectRow.appendChild(tdElement);
 
+
     return projectRow;
 }
 
-function closeDialog(clearElements, dialog){
-clearElements.forEach(el => {
-    el.value = "";
-    dialog.close();
-})
+function onClickEdit(projectId) {
+    return (e) => {
+        console.log('in');
+        projectEditDialog.show();
+
+        console.log('inSubmit');
+        e.preventDefault();
+
+        const newName = projectEditDialogInput.value;
+
+        const project = projects.find(proj => proj.id === projectId);
+        console.log(project);
+        project.name = newName;
+
+        closeDialog([projectEditDialogInput], projectEditDialog);
+        LoadData();
+        console.log('endRemove');
+
+        editDialogForm.removeEventListener('submit', onClickEdit())
+
+
+    };
+
+}
+
+function closeDialog(clearElements, dialog) {
+    clearElements.forEach(el => {
+        el.value = "";
+        dialog.close();
+    })
+}
+
+function filterAssignments(assignments, projectId) {
+    const output = [];
+
+    assignments.forEach(ass => {
+
+        if (projectId !== ass.projectId) {
+            output.push(ass);
+            return;
+        }
+
+        assignments.row.remove();
+    });
+    return output;
 }
 
 function createElementWithText(tag, text) {
@@ -238,21 +279,14 @@ function getTotalTimeToday() {
 
 
 function getTotalTimePerProject(projects) {
-    const output = [];
-
-    projects.forEach(projectName => {
-        const prj = new ProjectWithTime(projectName);
+    projects.forEach(prj => {
 
         assignments.forEach(ass => {
-            if (ass.project === prj.name) {
+            if (ass.projectId == prj.id) {
                 prj.totalTimeMs += getTimeFromAssignment(ass);
             }
         });
-
-        output.push(prj);
-    })
-
-    return output;
+    });
 }
 
 function getTimeFromAssignment(assignment) {
