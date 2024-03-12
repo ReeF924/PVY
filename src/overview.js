@@ -42,9 +42,7 @@ projectsLayoutButton.addEventListener('click', () => {
     isSelectedOverview = false;
 });
 
-closeEditProjectDialogButton.addEventListener('click', () => {
-    closeDialog([projectEditDialogInput], projectEditDialog);
-});
+
 
 
 function LoadData() {
@@ -190,6 +188,10 @@ function createProjectRow({id, name, totalTimeMs}) {
         assignments.filter(ass => ass.projectId !== id);
 
         LoadData();
+    });
+
+    closeEditProjectDialogButton.addEventListener('click', () => {
+        closeDialog([projectEditDialogInput], projectEditDialog);
     });
 
 
