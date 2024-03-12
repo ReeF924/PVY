@@ -6,6 +6,7 @@
     <link rel="stylesheet" href="./style.css">
     <link rel="stylesheet" href="./bs.css">
     <link rel="stylesheet" href="addDialog.css">
+    <link rel="stylesheet" href="projectEditDialog.css">
 </head>
 <body>
 <form class="dialog">
@@ -15,55 +16,57 @@
 
     </div>
     <div class="dialog-body">
-        <div>
+        <div class="standard-input-container">
             <label for="addAssignmentProjectSelect">Projekt</label>
             <select id="addAssignmentProjectSelect">
                 <option>First</option>
                 <option>Second</option>
             </select>
         </div>
-        <div>
+        <div class="standard-input-container">
             <label for="addAssignmentNameInput">Cinnost</label>
-            <input type="text" id="addAssignmentNameInput" placeholder="Zadejte co delate">
+            <input type="text" id="addAssignmentNameInput" placeholder="Zadejte, co jste delali">
 
         </div>
 
-        <div>
+        <div class="standard-input-container">
             <label for="addAssignmentBeginDateInput">Den</label>
             <input type="date" id="addAssignmentBeginDateInput">
         </div>
 
-        <!--        <div>-->
-        <!--            <label>Den</label>-->
-        <!--            <input type="date" id="">-->
 
-        <!--        </div>-->
+        <div class="dialog-times-container">
+            <div>
+                <div>
+                    <div id="startTime">
+                        <label>Začátek</label>
+                        <div>
+                            <input type="number" id="addAssignmentBeginDateHour" min="0" max="23" value="0" required>
+                            :
+                            <input type="number" id="addAssignmentBeginDateMinute" min="0" max="59" value="0" required>
+                        </div>
+                    </div>
 
-        <div class="time-input-wrapper">
-            <div class="time-input-container">
-                <div class="begin-time">
-                    <label>Zacatek</label>
-                    <div class="time-input-row">
-                        <input type="number" id="addAssignmentBeginHoursInput" min="0" max="23">
-                        <span>:</span>
-                        <input type="number" id="addAssignmentBeginMinutesInput" min="0" max="59">
+                    <div id="endTime">
+
+                        <label>Konec</label>
+                        <div>
+                            <input type="number" id="addAssignmentEndDateHour" min="0" max="23" value="23" required>
+                            :
+                            <input type="number" id="addAssignmentEndDateMinute" min="0" max="59" value="59" required>
+                        </div>
                     </div>
                 </div>
-                <div class="end-time">
-                    <label>Konec</label>
-                    <div class="time-input-row">
-                        <input type="number" id="addAssignmentEndHoursInput" min="0" max="23">
-                        <span>:</span>
-                        <input type="number" id="addAssignmentEndMinutesInput" min="0" max="59">
-                    </div>
-                </div>
-
             </div>
-            <div class="time-input-total">
-                }
-            </div>
+            <div class="totalTimeBracket">}</div>
+            <div id="timeCalcDialog">23:59</div>
         </div>
+
     </div>
+
+    <button>
+        Ulozit
+    </button>
 
 </form>
 

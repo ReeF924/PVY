@@ -6,6 +6,8 @@ class Assignment {
         this.endDateTime = endDateTime;
         this.projectId = projectId;
         this.row = null;
+
+        console.log('new Ass with Id: ' + this.id);
     }
 }
 
@@ -14,5 +16,6 @@ class Project {
         this.id = projectIdCounter++;
         this.name = name;
         this.totalTimeMs = totalTimeMs;
+        console.log('new Prj with Id: ' + this.id);
     }
 }

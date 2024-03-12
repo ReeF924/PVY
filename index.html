@@ -24,7 +24,7 @@
 <main>
     <header class="center-div">
         <div class="projects-container">
-            <input id="projectNameInput" type="text" placeholder="Zadejte nazev ukolu">
+            <input id="assignmentNameInput" type="text" placeholder="Zadejte nazev ukolu">
 
             <select id="projectSelect" class="center-div">
             </select>
@@ -37,23 +37,90 @@
         <form class="edit-project-container" id="edit-dialog-form">
             <div class="dialog-header">
                 <span>Novy zaznam</span>
-                <span id="close-edit-project-dialog" class="close-dialog">C</span>
+                <span id="close-edit-project-dialog" class="close-dialog">X</span>
             </div>
 
             <div class="center-div">
-                <input type="text" id="project-edit-dialog-input" class="" placeholder="Zadejte název projektu">
+                <input type="text" id="project-edit-dialog-input" class="" placeholder="Zadejte název projektu"
+                       required>
             </div>
 
             <div class="center-div button-container">
-                <button type="button" id="project-edit-dialog-button">Ulozit</button>
+                <button type="submit" id="project-edit-dialog-button">Ulozit</button>
             </div>
         </form>
     </dialog>
 
+    <dialog id="addAssignmentDialog">
+        <form class="dialog" id="addAssignmentDialogForm">
+            <div class="dialog-header">
+                <span>Novy zaznam</span>
+                <span class="close-dialog" id="addAssignmentCloseButton">X</span>
+
+            </div>
+            <div class="dialog-body">
+                <div class="standard-input-container">
+                    <label for="addAssignmentProjectSelect">Projekt</label>
+                    <select id="addAssignmentProjectSelect">
+                        <option>First</option>
+                        <option>Second</option>
+                    </select>
+                </div>
+                <div class="standard-input-container">
+                    <label for="addAssignmentNameInput">Cinnost</label>
+                    <input type="text" id="addAssignmentNameInput" placeholder="Zadejte, co jste delali">
+
+                </div>
+
+                <div class="standard-input-container">
+                    <label for="addAssignmentDateInput">Den</label>
+                    <input type="date" id="addAssignmentDateInput">
+                </div>
+
+
+                <div class="dialog-times-container">
+                    <div>
+                        <div>
+                            <div id="startTime">
+                                <label>Začátek</label>
+                                <div>
+                                    <input type="number" id="addAssignmentBeginDateHour" min="0" max="23" value="0"
+                                           required>
+                                    :
+                                    <input type="number" id="addAssignmentBeginDateMinute" min="0" max="59" value="0"
+                                           required>
+                                </div>
+                            </div>
+
+                            <div id="endTime">
+
+                                <label>Konec</label>
+                                <div>
+                                    <input type="number" id="addAssignmentEndDateHour" min="0" max="23" value="23"
+                                           required>
+                                    :
+                                    <input type="number" id="addAssignmentEndDateMinute" min="0" max="59" value="59"
+                                           required>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="totalTimeBracket">}</div>
+                    <div id="totalTimeAddAssignmentDialog">00:00</div>
+                </div>
+            </div>
+
+            <button class="">
+                Ulozit
+            </button>
+        </form>
+    </dialog>
+
+
     <section id="overview-layout">
         <div class="main-header d-flex jc-space-between">
             <h1>Dneska jsem makal jak sroub: <span id="totalTimeToday">0:00:00</span></h1>
-            <button type="button">Novy zaznam</button>
+            <button type="button" id="addAssignmentButton">Novy zaznam</button>
         </div>
         <table id="assignmentTable">
             <thead>
